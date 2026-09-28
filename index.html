@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Avaliacao Trimestral - Natacao</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#0a1628;--blue:#1a4a8a;--aqua:#00b4d8;--aqua-light:#90e0ef;--white:#f8faff;--gray:#8a9bb5;--border:#dce6f5;--success:#10b981;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'DM Sans',sans-serif;background:var(--navy);color:var(--navy);min-height:100vh;}
+.header{background:linear-gradient(135deg,#0a1628 0%,#1a4a8a 60%,#00b4d8 100%);padding:48px 40px 80px;position:relative;overflow:hidden;}
+.header::after{content:'';position:absolute;bottom:-2px;left:0;right:0;height:60px;background:var(--white);clip-path:ellipse(55% 100% at 50% 100%);}
+.header-inner{max-width:760px;margin:0 auto;position:relative;z-index:1;}
+.header-badge{display:inline-block;background:rgba(255,255,255,0.15);color:var(--aqua-light);font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;padding:6px 14px;border-radius:20px;border:1px solid rgba(144,224,239,0.3);margin-bottom:20px;}
+.header h1{font-family:'DM Serif Display',serif;font-size:clamp(28px,5vw,42px);color:#fff;line-height:1.15;margin-bottom:10px;}
+.header h1 em{color:var(--aqua-light);font-style:italic;}
+.header p{color:rgba(255,255,255,0.65);font-size:14px;font-weight:300;}
+main{background:var(--white);max-width:760px;margin:0 auto;padding:40px 24px 60px;}
+.section-label{font-size:10px;font-weight:600;letter-spacing:2.5px;text-transform:uppercase;color:var(--aqua);margin-bottom:12px;}
+.turmas-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:32px;}
+.turma-btn{border:2px solid var(--border);background:#fff;border-radius:14px;padding:16px 18px;cursor:pointer;text-align:left;transition:all 0.2s;}
+.turma-btn:hover{border-color:var(--aqua);background:#f0fbff;}
+.turma-btn.active{border-color:var(--blue);background:linear-gradient(135deg,#f0f7ff,#e8f4ff);box-shadow:0 4px 14px rgba(26,74,138,0.12);}
+.turma-btn .emoji{font-size:22px;margin-bottom:6px;display:block;}
+.turma-btn .name{font-weight:600;font-size:15px;color:var(--navy);}
+.turma-btn .age{font-size:12px;color:var(--gray);margin-top:2px;}
+.form-card{background:#fff;border:1px solid var(--border);border-radius:20px;padding:28px;margin-bottom:24px;box-shadow:0 2px 12px rgba(10,22,40,0.05);}
+.field{margin-bottom:20px;}
+.field label{display:block;font-size:13px;font-weight:500;color:#4a5a6e;margin-bottom:7px;}
+.field input,.field select,.field textarea{width:100%;border:1.5px solid var(--border);border-radius:10px;padding:11px 14px;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--navy);background:#fafcff;outline:none;transition:border-color 0.2s;}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--aqua);background:#fff;}
+.field textarea{resize:vertical;min-height:80px;}
+.row-2{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.indicadores-title{font-family:'DM Serif Display',serif;font-size:18px;color:var(--navy);margin-bottom:6px;}
+.indicadores-sub{font-size:13px;color:var(--gray);margin-bottom:20px;}
+.indicador-item{background:#f8faff;border:1px solid var(--border);border-radius:14px;padding:18px 20px;margin-bottom:12px;}
+.ind-header{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:14px;}
+.ind-num{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--aqua);margin-bottom:3px;}
+.ind-texto{font-size:14px;font-weight:500;color:var(--navy);line-height:1.4;}
+.stars{display:flex;gap:6px;flex-shrink:0;}
+.star{width:34px;height:34px;border:2px solid var(--border);border-radius:8px;background:#fff;cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center;transition:all 0.15s;font-weight:600;color:var(--gray);}
+.star:hover{border-color:var(--aqua);background:#e8f9ff;color:var(--aqua);}
+.star.selected{background:var(--blue);border-color:var(--blue);color:#fff;}
+.star.s0.selected{background:#64748b;border-color:#64748b;}
+.star.s5.selected{background:var(--success);border-color:var(--success);}
+.aluno-list{display:flex;flex-direction:column;gap:8px;margin-bottom:16px;}
+.aluno-row{display:flex;align-items:center;gap:10px;background:#fff;border:1.5px solid var(--border);border-radius:10px;padding:10px 14px;}
+.aluno-row input[type="text"]{flex:1;border:none;background:none;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--navy);outline:none;padding:0;}
+.aluno-row .remove-btn{background:none;border:none;color:#ccc;cursor:pointer;font-size:18px;line-height:1;transition:color 0.15s;}
+.aluno-row .remove-btn:hover{color:#e55;}
+.add-aluno-btn{background:none;border:1.5px dashed var(--border);border-radius:10px;width:100%;padding:10px;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--gray);cursor:pointer;transition:all 0.2s;}
+.add-aluno-btn:hover{border-color:var(--aqua);color:var(--aqua);background:#f0fbff;}
+.aluno-card{background:#fff;border:1px solid var(--border);border-radius:20px;margin-bottom:20px;overflow:hidden;box-shadow:0 2px 10px rgba(10,22,40,0.04);}
+.aluno-card-header{background:linear-gradient(90deg,#1a4a8a,#0077b6);padding:14px 22px;display:flex;align-items:center;gap:12px;}
+.aluno-card-header .avatar{width:34px;height:34px;background:rgba(255,255,255,0.2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;}
+.aluno-card-header .aluno-nome{font-weight:600;font-size:15px;color:#fff;}
+.aluno-card-body{padding:20px 22px;}
+.progress-bar-wrap{background:#eef2f8;border-radius:8px;height:6px;margin-top:8px;}
+.progress-bar{background:linear-gradient(90deg,var(--aqua),var(--blue));height:6px;border-radius:8px;transition:width 0.3s;}
+.btn-primary{background:linear-gradient(135deg,var(--blue),#0077b6);color:#fff;border:none;border-radius:12px;padding:14px 32px;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:600;cursor:pointer;transition:all 0.2s;box-shadow:0 4px 14px rgba(26,74,138,0.25);width:100%;}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(26,74,138,0.35);}
+.btn-secondary{background:#fff;color:var(--blue);border:1.5px solid var(--blue);border-radius:12px;padding:12px 28px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer;transition:all 0.2s;width:100%;margin-top:10px;}
+.btn-secondary:hover{background:#f0f7ff;}
+.result-header{background:linear-gradient(135deg,var(--success),#059669);border-radius:16px;padding:24px;color:#fff;text-align:center;margin-bottom:24px;}
+.result-header .check{font-size:40px;margin-bottom:8px;}
+.result-header h2{font-family:'DM Serif Display',serif;font-size:24px;}
+.result-header p{opacity:0.85;font-size:13px;margin-top:4px;}
+.result-table{width:100%;border-collapse:collapse;font-size:13px;}
+.result-table th{background:var(--navy);color:#fff;padding:10px 14px;text-align:left;font-weight:500;}
+.result-table th:first-child{border-radius:8px 0 0 8px;}
+.result-table th:last-child{border-radius:0 8px 8px 0;}
+.result-table td{padding:10px 14px;border-bottom:1px solid var(--border);}
+.result-table tr:last-child td{border:none;}
+.nota-pill{display:inline-block;padding:3px 10px;border-radius:20px;font-weight:600;font-size:13px;}
+.n0{background:#f1f5f9;color:#64748b;}.n1{background:#fee2e2;color:#b91c1c;}.n2{background:#fef3c7;color:#92400e;}.n3{background:#fef9c3;color:#713f12;}.n4{background:#d1fae5;color:#065f46;}.n5{background:#dcfce7;color:#14532d;}
+.copy-btn{background:#f0f7ff;border:1.5px solid var(--blue);color:var(--blue);border-radius:10px;padding:10px 20px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer;margin-top:16px;transition:all 0.2s;}
+.copy-btn:hover{background:var(--blue);color:#fff;}
+.steps{display:flex;align-items:center;gap:8px;margin-bottom:28px;}
+.step{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:500;color:var(--gray);}
+.step .dot{width:26px;height:26px;border-radius:50%;background:var(--border);color:var(--gray);font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;transition:all 0.3s;}
+.step.active .dot{background:var(--blue);color:#fff;}
+.step.done .dot{background:var(--success);color:#fff;}
+.step.active{color:var(--navy);}
+.step-line{flex:1;height:2px;background:var(--border);border-radius:2px;}
+.hidden{display:none !important;}
+@media(max-width:500px){.turmas-grid{grid-template-columns:1fr 1fr;}.row-2{grid-template-columns:1fr;}.ind-header{flex-direction:column;}.stars{flex-wrap:wrap;}main{padding:28px 16px 48px;}}
+
+/* Compatibilidade mobile: iPhone/iPad/Android */
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%;-webkit-tap-highlight-color:transparent;}
+body{padding-bottom:env(safe-area-inset-bottom);}
+button,input,select,textarea{touch-action:manipulation;}
+button{-webkit-appearance:none;appearance:none;}
+.field input,.field select,.field textarea{min-height:44px;}
+@media(max-width:700px){
+  .header{padding:32px 18px 64px;}
+  .header-inner{max-width:none;}
+  main{width:100%;padding:28px 14px calc(48px + env(safe-area-inset-bottom));}
+  .form-card{padding:20px 16px;border-radius:16px;}
+  .aluno-card-body{padding:16px;}
+  .aluno-card-header{padding:13px 16px;}
+  .ind-header{gap:14px;}
+  .stars{width:100%;gap:6px;}
+  .star{flex:1;min-width:38px;min-height:42px;height:42px;}
+  .result-table{min-width:760px;}
+  .form-card:has(.result-table){overflow-x:auto;-webkit-overflow-scrolling:touch;}
+  .steps{gap:5px;}
+  .step{font-size:10px;gap:5px;white-space:nowrap;}
+  .step .dot{width:28px;height:28px;min-width:28px;}
+}
+@media(max-width:420px){
+  .header h1{font-size:30px;}
+  .header p{font-size:13px;}
+  .turmas-grid{gap:8px;}
+  .turma-btn{padding:14px 12px;}
+  .turma-btn .name{font-size:14px;}
+  .turma-btn .age{font-size:11px;}
+  .step-line{min-width:6px;}
+  .step{font-size:0;}
+  .step .dot{font-size:12px;}
+}
+/* Safari pode aumentar/alterar controles de formulário; 16px evita zoom automático. */
+@supports (-webkit-touch-callout:none){
+  .field input,.field select,.field textarea,
+  .aluno-row input[type="text"]{font-size:16px;}
+}
+
+</style>
+</head>
+<body>
+<div class="header">
+  <div class="header-inner">
+    <span class="header-badge">Contorno do Corpo - Unidade I</span>
+    <h1>Avaliacao<br><em>Trimestral</em> de Natacao</h1>
+    <p>Avaliacao Completa 2025/2026 &nbsp;&middot;&nbsp; Notas de 0 a 5</p>
+  </div>
+</div>
+<main>
+  <div class="steps">
+    <div class="step active" id="step1-dot"><div class="dot">1</div> Turma</div>
+    <div class="step-line"></div>
+    <div class="step" id="step2-dot"><div class="dot">2</div> Alunos</div>
+    <div class="step-line"></div>
+    <div class="step" id="step3-dot"><div class="dot">3</div> Avaliacao</div>
+    <div class="step-line"></div>
+    <div class="step" id="step4-dot"><div class="dot">4</div> Resultado</div>
+  </div>
+  <div id="step1">
+    <p class="section-label">Passo 1 - Selecionar turma</p>
+    <div class="turmas-grid">
+      <button type="button" class="turma-btn" onclick="selectTurma('baby')" id="btn-baby"><span class="emoji">&#x1F37C;</span><div class="name">Baby Shark</div><div class="age">6 meses a 2 anos</div></button>
+      <button type="button" class="turma-btn" onclick="selectTurma('nemo')" id="btn-nemo"><span class="emoji">&#x1F420;</span><div class="name">Nemo</div><div class="age">3 a 4 anos</div></button>
+      <button type="button" class="turma-btn" onclick="selectTurma('dorys')" id="btn-dorys"><span class="emoji">&#x1F41F;</span><div class="name">Dorys</div><div class="age">5 a 8 anos</div></button>
+      <button type="button" class="turma-btn" onclick="selectTurma('impulse')" id="btn-impulse"><span class="emoji">&#x1F3CA;</span><div class="name">Impulse</div><div class="age">9 a 12 anos</div></button>
+    </div>
+    <div class="form-card" id="meta-form" style="display:none;">
+      <div class="field"><label>Seu nome</label><select id="professor"><option value="">- Selecione o professor -</option><option>Allan</option><option>Willer</option><option>Stephanny</option></select></div>
+      <div class="row-2">
+        <div class="field"><label>Horario da turma</label><select id="horario-turma"><option value="">- Selecione o horario -</option></select></div>
+        <div class="field"><label>Data da avaliacao</label><input type="date" id="data-aval"></div>
+      </div>
+      <button type="button" class="btn-primary" onclick="goToStep2()">Proximo: confirmar alunos</button>
+    </div>
+  </div>
+  <div id="step2" class="hidden">
+    <p class="section-label">Passo 2 - Alunos da turma</p>
+    <div class="form-card">
+      <div class="indicadores-title" id="turma-titulo-s2">Turma</div>
+      <p class="indicadores-sub">Confirme ou ajuste os alunos da turma.</p>
+      <div class="aluno-list" id="aluno-list"></div>
+      <button type="button" class="add-aluno-btn" onclick="addAluno()">+ Adicionar aluno</button>
+      <br><br>
+      <button type="button" class="btn-primary" onclick="goToStep3()">Proximo: avaliar alunos</button>
+      <button type="button" class="btn-secondary" onclick="goToStep1()">Voltar</button>
+    </div>
+  </div>
+  <div id="step3" class="hidden">
+    <p class="section-label">Passo 3 - Avaliacao individual</p>
+    <div id="avaliacao-cards"></div>
+    <div class="form-card">
+      <button type="button" class="btn-primary" onclick="gerarResultado()">Gerar resultado consolidado</button>
+      <button type="button" class="btn-secondary" onclick="goToStep2()">Voltar</button>
+    </div>
+  </div>
+  <div id="step4" class="hidden">
+    <div class="result-header"><div class="check">&#x2705;</div><h2>Avaliacao concluida!</h2><p id="result-meta"></p></div>
+    <p class="section-label">Resumo da turma</p>
+    <div class="form-card" style="overflow-x:auto;"><table class="result-table" id="result-table"></table></div>
+    <div class="form-card">
+      <div class="field"><label>Observacoes gerais da turma (opcional)</label><textarea id="obs-gerais" placeholder="Registro de pontos de atencao, destaques, encaminhamentos..."></textarea></div>
+      <button type="button" class="copy-btn" onclick="copiarResultado()">Copiar resultado para enviar</button>
+      <br>
+      <button type="button" class="btn-primary" style="margin-top:12px;" onclick="novaAvaliacao()">Fazer nova avaliacao</button>
+    </div>
+  </div>
+</main>
+<script>
+var turmas = {
+  baby: {nome:"Baby Shark",emoji:"Bebe",faixa:"6 meses a 2 anos",indicadores:[
+    {num:"1",texto:"Interacao ativa com o professor na agua"},
+    {num:"2",texto:"Flutuacao passiva com conforto"},
+    {num:"3",texto:"Resposta positiva a submersao breve"},
+    {num:"4",texto:"Corpo mais relaxado e alinhado nas posicoes"},
+    {num:"5",texto:"Aceita deslocamentos curtos com apoio"},
+    {num:"6",texto:"Responde bem a deslocamentos com imersoes leves"}
+  ]},
+  nemo: {nome:"Nemo",emoji:"Nemo",faixa:"3 a 4 anos",indicadores:[
+    {num:"1",texto:"Respiracao lateral com apoio"},
+    {num:"2",texto:"Deslocamento curto com autonomia"},
+    {num:"3",texto:"Organizacao corporal em sequencia simples (entrar, deslocar, parar)"},
+    {num:"4",texto:"Desloca com melhor alinhamento corporal"},
+    {num:"5",texto:"Mantem o deslocamento com ritmo"},
+    {num:"6",texto:"Alterna posicoes com controle"}
+  ]},
+  dorys: {nome:"Dorys",emoji:"Dorys",faixa:"5 a 8 anos",indicadores:[
+    {num:"1",texto:"Respira lateralmente com apoio constante"},
+    {num:"2",texto:"Coordenacao continua de bracos e pernas"},
+    {num:"3",texto:"Alinhamento corporal durante o deslocamento"},
+    {num:"4",texto:"Nado mais alinhado e continuo"},
+    {num:"5",texto:"Executa costas com coordenacao basica"},
+    {num:"6",texto:"Realiza sequencias com controle e continuidade"}
+  ]},
+  impulse: {nome:"Impulse",emoji:"Impulse",faixa:"9 a 12 anos",indicadores:[
+    {num:"1",texto:"Respiracao lateral funcional"},
+    {num:"2",texto:"Transicao eficiente entre bracadas"},
+    {num:"3",texto:"Controle de ritmo e continuidade"},
+    {num:"4",texto:"Nado com menor gasto de energia"},
+    {num:"5",texto:"Mantem padrao tecnico em distancias maiores"},
+    {num:"6",texto:"Executa sequencias com organizacao"}
+  ]}
+};
+
+var horariosPorTurma = {
+  baby:["seg 17h","qua 07h50","qua 17h","qui 10h20","sab 10h20"],
+  nemo:["seg 07h","seg 10h20","ter 07h","ter 08h40","ter 17h","ter 18h50","qua 10h20","qui 07h50","qui 17h","sex 10h20","sex 17h"],
+  dorys:["seg 09h30","seg 18h","seg 18h50","ter 09h30","ter 18h","ter 19h40","qua 09h30","qua 18h","qua 18h50","qui 09h30","qui 18h","qui 18h50","qui 19h40","sex 09h30","sex 18h","sex 18h50","sab 08h40"],
+  impulse:["seg 08h40","ter 15h30","ter 18h50","qua 08h40","qui 08h40","qui 18h","sex 08h40","sab 09h30"]
+};
+
+var alunosPorTurma = {
+  "baby|seg 17h":["ISABELA VALERIANO SILVA","JOSE FILIPE ROCHA CAMPOS","BENTO DA SILVA FERREIRA","MATHEUS JOSE DIAS RIBAS FERREIRA","MIGUEL TEIXEIRA BARRETO SOL","JOSE AMARAL BRAGA","ANA CECILIA REZENDE DE OLIVEIRA","GAEL LUCCA HERMOGENESES DA SILVA"],
+  "baby|qua 07h50":["AURORA COUTO MACIEL","HEITOR VIANA SOL CRUZ","MATHEUS JOSE DIAS RIBAS FERREIRA"],
+  "baby|qua 17h":["BENTO DE SOUZA BARBALHO","HENRIQUE MIRANDA SILVA","ANA LIZ FELIX DOS REIS","NOAH SILVA DE ARAUJO","VINICIUS BATISTA SENA DE MIRANDA"],
+  "baby|qui 10h20":["HUGO SANTIAGO PEREIRA SILVA","MATTEO SANTANA EIRAS","NOAH GABRIEL EVANGELISTA SOARES","HENRIQUE RODRIGUES DE BARROS","JULIA SANTANA DE AZEVEDO"],
+  "baby|sab 10h20":["MARCO AURELIO SILVA DE PAULO","ANNA CLARA PAULA DE LIMA","GAEL SOUZA RODRIGUES","GIOVANNA MARIA SOARES COSTA SILVA","ANTONIO ALVES PAIVA CASTRO","MIGUEL BORGES NUNES","ALICE VIEIRA LIMA COSTA","OLIVIA MARIA PIRES VOLPE","NOAH GABRIEL EVANGELISTA SOARES","MIGUEL ROCHA COSTA","LAURA LUZ BENTO DE OLIVEIRA","PEDRO HENRIQUE DA SILVA SOUSA"],
+  "nemo|seg 07h":["FERNANDA MAGALHAES DIAS","NOAH CORREA PIO","ANNA VITORIA SILVA DE SOUZA"],
+  "nemo|seg 10h20":["MARCOS DE PAULA TORQUATO","MATHEUS FELIPE DA CRUZ DAVILA","ISAAC MARQUES DA SILVA","CATARINA TAVARES DA COSTA"],
+  "nemo|ter 07h":["JULIA SANTANA DE AZEVEDO","AUGUSTO ALBUQUERQUE BRIGOLINI","HELOISA MEIRELES MOMOSI","ANTONELA REZENDE VIERA"],
+  "nemo|ter 08h40":["LIZ DE REZENDE BULHOES","ANNA VITORIA SILVA DE SOUZA","THEO DE MORAES GROBERIO","MARIA TEREZA MATIAS PENA","ANA BEATRIZ MATIAS PENA"],
+  "nemo|ter 17h":["BERNADO PARAFITA GONCALVES DE MATOS","AMELIA GABRIELLE DE OLIVEIRA DELBEN","MIGUEL VERONA MIRANDA D LIMA","LUCAS MARIOSA ANDRADE"],
+  "nemo|ter 18h50":["GAEL GOUVEIA RODRIGUES REIS","MARIA ANTONELLA CESAR SOUZA","AYLA OLIVEIRA DA ROCHA","MIGUEL XAVIER GONZAGA"],
+  "nemo|qua 10h20":["VICTOR MARQUES MUNIZ","JULIA RESENDE MAGALHAES","GUILHERME FELIPE LEMOS SILVA","MARCELO JOSE SOUZA MIRANDA"],
+  "nemo|qui 07h50":["BENTO FLORES GONCALVES","IGOR FERREIRA JARDIM","MATHEUS FELIPE DA CRUZ DAVILA","JULIA RESENDE MAGALHAES"],
+  "nemo|qui 17h":["ARTHUR RODRIGUES GONZAGA DE MELO","LUCAS MARIOSA ANDRADE","HEITOR SERGIO MACHADO","LUCAS GABRIEL COSTA RIBEIRO"],
+  "nemo|sex 10h20":["LEONARDO DA SILVA RODRIGUES FILHO","DAVI GOULART SOARES"],
+  "nemo|sex 17h":["LIZ DE REZENDE BULHOES","GABRIEL ELIAS SOUZA CAMPOS","AMELIA GABRIELLE DE OLIVEIRA DELBEM","SAMUEL CAMPOS TREVISANI"],
+  "dorys|seg 09h30":["MATEUS DE PAULA TORQUATO","MARIA CECILIA FERREIRA AVELAR","VINICIOS MIGUEL DO CARMO EUGENIO","ALICIA LIZ ALVES MACIEL","BERNARDO LUIS DOMINGOS MOREIRA","ALICE MARIA REZENDE MORAES DE MARCILIA","SAMUEL GONCALVES PENA","ISIS COTTA OLIVEIRA","SOPHIA ISABELA DAMASCENO FERREIRA","MARIA CLARA SANTOS VINHAL","CECILIA BRANDAO DE OLIVEIRA","MIGUEL JOSE DE MIRANDA"],
+  "dorys|seg 18h":["ISABELA MENDES CYRIANO","ISANIM TAINA BATISTA MUNIZ","ENZO GABRIEL FERREIRA MENDES PAULA","ALICE MEIRELES MIRANDA","GUSTAVO HENRIQUE PEREIRA COSTA","LARISSA BITENCOURT DE ALMEIDA"],
+  "dorys|seg 18h50":["DAVI BITENCOURT COELHO MORAIS","MILENA FERNANDA MIRANDA COSTA","ANTHONY RAFAEL DOS SANTOS JOSINO","BERNARDO AMARAL MAXIMIANO SOUZA QUEIROS","ARTHUR HENRIQUE DIAS REZENDE","GABRIEL MARTINS MENDES","EMANUELLE MELO RODRIGUES","GAEL BARROSO HELENO"],
+  "dorys|ter 09h30":["HELENA COIMBRA ANDRADE","DAVI MILAGRES MENEZES","MARIA LUIZA NEVES ALMEIDA PEREIRA","ANA LUIZA FARIA OSTAQUIO","HELENA REZENDE AZIO","ELYSA MAGALHAES SILVA FARIA","ANA LIVIA RODRIGUES SANTOS","OTTO GOIS TORRES","MARIA DO CARMO SILVA","ALICIA MORAES MAIA"],
+  "dorys|ter 18h":["ABRAAO ALICE CORREIA","LIVIA BITENCOURT MOREIRA","ARTHUR ANTONUCCI VASCONCELOS","CECILIA SOUZA OLIVEIRA","KAUANY VITORIA RIBEIRO DE SOUZA","SARAH GABRIELLY MILAGRES CORREA","HELENA PEIXOTO RIBEIRO","ISIS EMANUELLY FONSECA CAMPOS","LAVINIA MARIA GONZAGA BALBINO","ARYA GARRIDES DE OLIVEIRA","HELENA OLIVEIRA DA ROCHA","ALVARO MIGUEL SOUZA MARTINS"],
+  "dorys|ter 19h40":["ARTHUR DOS SANTOS MENDES","LUIZA HELENA DOS SANTOS","BERNARDO HENRIQUE DE MATOS COSTA","BERNARDO REZENDE SILVA"],
+  "dorys|qua 09h30":["MELISSA NEVES COSTA MATOSINHOS","ISADORA LOPES BEGHINI","SOPHIA ISABELA DAMASCENO FERREIRA","JOAQUIM SANTOS CARVALHO","MIGUEL JOSE DE MIRANDA","JOSE FELIPE SOUZA MIRANDA","LIS MARIAH RODRIGUES DOS SANTOS","LARISSA THAIS DE CARVALHO SILVA","LAURA ALEXIA SOUSA BARBOSA","ISIS COTTA OLIVEIRA","DAVI PENA MATOS","BERNARDO LUCAS MATOSINHOS BRAGA"],
+  "dorys|qua 18h":["MELISSA VICTORIA LOBO DANTAS","HELENA PEIXOTO RIBEIRO","GUSTAVO HENRIQUE PEREIRA COSTA","MIGUEL PEIXOTO LIMA","LUANA DOS SANTOS SALES"],
+  "dorys|qua 18h50":["MARIANA LIBERALINO DE SOUZA","ANTHONY RAFAEL DOS SANTOS JOSINO","BERNARDO AMARAL MAXIMIANO SOUZA QUEIROS","ARTHUR HENRIQUE DIAS RESENDE","VALENTINA HELENA GONCALVES DA CRUZ","THEO AZEVEDO GALVAO","JOAO MIGUEL DUTRA COELHO","GABRIEL MARTINS MENDES","LUISA MARIA ALMEIDA NEIVA DE FARIA","LUCAS MARTINS MENDES","CATARINA DE MIRANDA MORAES","LUIS MIGUEL GURGEL DA CRUZ","HELENA LUIZA SOUZA FORTALEZA","MANUELA DE CASSIA NASCIMENTO SOUZA"],
+  "dorys|qui 09h30":["MARIA FERNANDA DA SILVA COSTA","MARIA LUIZA NEVES ALMEIDA PEREIRA","DAVI MILAGRES MENEZES","ANA LUISA FARIA OSTAQUIO","HELENA COIMBRA ANDRADE","ALICIA SANTOS ALMEIDA","OTTO GOIS TORRES","ALICIA MORAES MAIA"],
+  "dorys|qui 18h":["HECTOR MIGUEL CEZAR DE ARRUDA","PEDRO CARVALHO LACERDA CAMPOS","JULIA CARVALHO LACERDA CAMPOS","SOPHIA HENRIQUES ESTEVES","ARTHUR ANTONUCCI VASCONCELOS","ISIS EMANUELLY FONSECA CAMPOS","LARISSA BITENCOURT DE ALMEIDA","IVAN BORBA VIERA","GABRIEL HENRIQUE DE PAULA GOMES","ALLANA ELOA CAMPOS","HEITOR LINO CAMPOS","ANTHONY ISMAEL DONATO SILVA","ENZO GABRIEL FERREIRA MENDES PAULA"],
+  "dorys|qui 18h50":["AURORA DUCHARME","ALICE FERNANDA OLIVEIRA CARDOSO","MIGUEL DE CASTRO TEIXEIRA PIRES","SOPHIA HENRIQUES ESTEVES","CAIO GOUVEIA RODRIGUES REIS","MARIA EDUARDA ALVES CARDOSO","LUISA GODINHO ALEIXO"],
+  "dorys|qui 19h40":["DAVI AUGUSTO DE REZENDE MELO","MARIANA FERREIRA ALVES","MANUELA MENDES MONTEIRO","TULIO MENDES MONTEIRO","LUANA AURORA GONCALVES PIRES ALMEIDA","ARTHUR VALENTIM ZEBRAL"],
+  "dorys|sex 09h30":["ZOE SARTI PEIXOTO","NICOLAS MARTINS FERREIRA ROCHA","ELOA MARTINS DOS SANTOS","DAVI PENA MATOS","AYLA CANCELA ANDRADE SOUZA LIMA","PIETRO JOSE ALVES CANDIDO","LUANA AURORA GONCALVES PIRES ALMEIDA","GABRIEL AZEVEDO CORREA E LOPES","LAURA ALEXIA SOUSA BARBOSA"],
+  "dorys|sex 18h":["LUIZA MARTINS SAO JOSE","DAVI DIAS MARTINS","PEDRO HENRIQUE GOULART DE SOUZA","HEITOR GOMES GONZAGA","GUADALUPE DE ASSIS VILELA GOMEZ","ALICIA REZENDE VIERA","JULIA ALVES NOBREGA","CLARA ALVES NOBREGA","AURORA DUCHARME","ISABELLA VALENTINA GOMES","LAIS VITAL DE PAULA","MARIA JULIA FERREIRA OLIVEIRA"],
+  "dorys|sex 18h50":["MIGUEL HENRIQUES DA SILVA CUNHA SENA","MARIANA LIBERALINO DE SOUZA","GUSTAVO NOAH DE SOUZA PINA","JOAO VITOR RIBEIRO","EMANUELLE MELO RODRIGUES","MANUELA DE CASSIA NASCIMENTO SOUZA","VALENTINA HELENA GONCALVES DA CRUZ","MATHEUS DOS SANTOS CARVALHO","LIANA GOIS TORRES"],
+  "dorys|sab 08h40":["NICOLAS MARTINS FERREIRA ROCHA","MARIA LUIZA COSTA NASCIMENTO","BERNARDO HENRIQUE BITENCOURT SILVA","BERNARDO SILVA DO CARMO","ALICE VIEIRA GONCALVES","CLARICE CANTELI NASCIMENTO","ALLANA ELOA CAMPOS","ALICE ADONAI COUTO DE PAULA"],
+  "impulse|seg 08h40":["JOAO FRANCISCO BEZERRA CAMPOS","ANA ESTER ALVES DIAS","VALENTINA ZACARONI","BERNADO NOGUEIRA","AUGUSTO SOARES DINIS","HELENA SOARES DINIS","ALICIA BARBOSA SILVA FELIX"],
+  "impulse|ter 15h30":["MANUELA ALVES BONOTO PEREIRA","IASMIN TAINA BATISTA MUNIZ","LAIR RAFAEL FELIX COSTA","BIANCA BITENCOURT DE ALMEIDA","ALICIA REZENDE VIERA","HEITOR DA CUNHA SANTOS","CLARA BEATRIZ CARVALHO LOBO"],
+  "impulse|ter 18h50":["LAVINIA ISABELI FONSECA CAMPOS","PEDRO BITENCOURT COELHO MORAIS","CAIO GOUVEIA RODRIGUES REIS","SOPHIA HENRIQUES ESTEVES","LARA VITORIA ALMEIDA SILVA","GABRIELA APARECIDA QUEIROZ DA COSTA","MARIA LAVINIA GENEROSO DE MORAIS","ARTHUR BARROS MARQUES","MARIA EDUARDA ALVES CARDOSO"],
+  "impulse|qua 08h40":["ARTUR VALENTIN DE SOUZA SILVA","ANA ESTER ALVES DIAS","MARIA FERNANDA NOGUEIRA HOFMANN","GUILHERME CARNEIRO MEIRELES","ISADORA ANTONUCCI VASCONCELOS","BERNARDO NOGUEIRA"],
+  "impulse|qui 08h40":["EMANUELLE JULIA DAS SANTOS PENA","VALENTINA ZACARONI","JOAO FRANCISCO BEZERRA CAMPOS","AGATHA BARBARA BARBOSA"],
+  "impulse|qui 18h":["LUISA GODINHO ALEIXO","ARTHUR BARROS MARQUES","LAISA MARIA DA CRUZ MENDONCA","BIANCA BITENCOURT DE ALMEIDA","MARIA FERNANDA CAMPOS","LAVINIA ISABELLI FONSECA CAMPOS","ISABELLA VALENTINA GOMES"],
+  "impulse|sex 08h40":["ISADORA ANTONOCCI VASCONCELOS","AUGUSTO SOARES DINIS","HELENA SOARES DINIS","AGATHA BARBARA BARBOSA","HEITOR SANCHES GOMES MACHADO DA SILVA"],
+  "impulse|sab 09h30":["MARIA FERNANDA CAMPOS","EDUARDA SAMPAIO FERRAZ","ESTELA SAMPAIO FERRAZ","ANTONIO AUGUSTO DE SOUZA COSTA","LARA VITORIA ALMEIDA SILVA","SAMUEL ANDERSON DAS DORES CARNEIRO","BEATRIZ ALMEIDA AMORIM"]
+};
+
+var selectedTurma=null,selectedHorario=null,alunos=[],notas={};
+
+function selectTurma(key){
+  selectedTurma=key;
+  document.querySelectorAll('.turma-btn').forEach(function(b){b.classList.remove('active');});
+  document.getElementById('btn-'+key).classList.add('active');
+  var sel=document.getElementById('horario-turma');
+  sel.innerHTML='<option value="">- Selecione o horario -</option>';
+  (horariosPorTurma[key]||[]).forEach(function(h){var o=document.createElement('option');o.value=h;o.textContent=h.toUpperCase();sel.appendChild(o);});
+  document.getElementById('meta-form').style.display='block';
+  var hoje=new Date();
+  var yyyy=hoje.getFullYear();
+  var mm=String(hoje.getMonth()+1).padStart(2,'0');
+  var dd=String(hoje.getDate()).padStart(2,'0');
+  document.getElementById('data-aval').value=yyyy+'-'+mm+'-'+dd;
+}
+
+function goToStep1(){show('step1');hide('step2');hide('step3');hide('step4');setStep(1);}
+
+function goToStep2(){
+  if(!selectedTurma){alert('Selecione uma turma primeiro.');return;}
+  if(!document.getElementById('professor').value){alert('Selecione seu nome antes de continuar.');return;}
+  var horario=document.getElementById('horario-turma').value;
+  if(!horario){alert('Selecione o horario da turma.');return;}
+  selectedHorario=horario;
+  var chave=selectedTurma+'|'+horario;
+  alunos=(alunosPorTurma[chave]||[]).slice();
+  if(alunos.length===0)alunos=[''];
+  notas={};
+  var t=turmas[selectedTurma];
+  document.getElementById('turma-titulo-s2').textContent=t.nome+' '+horario.toUpperCase()+' - '+t.faixa;
+  renderAlunoList();
+  show('step2');hide('step1');hide('step3');hide('step4');setStep(2);
+}
+
+function renderAlunoList(){
+  var list=document.getElementById('aluno-list');
+  list.innerHTML='';
+  alunos.forEach(function(nome,i){
+    var row=document.createElement('div');
+    row.className='aluno-row';
+    row.innerHTML='<span style="color:#8a9bb5;font-size:13px;font-weight:600;min-width:20px;">'+(i+1)+'.</span><input type="text" value="'+nome+'" placeholder="Nome do aluno" oninput="alunos['+i+']=this.value"><button type="button" class="remove-btn" onclick="removeAluno('+i+')">x</button>';
+    list.appendChild(row);
+  });
+}
+
+function addAluno(){alunos.push('');renderAlunoList();var inp=document.querySelectorAll('#aluno-list input');if(inp.length)inp[inp.length-1].focus();}
+function removeAluno(i){if(alunos.length===1){alunos[0]='';renderAlunoList();return;}alunos.splice(i,1);renderAlunoList();}
+
+function goToStep3(){
+  alunos=alunos.filter(function(n){return n.trim()!=='';});
+  if(alunos.length===0){alert('Adicione pelo menos um aluno.');return;}
+  renderAvaliacaoCards();
+  show('step3');hide('step2');hide('step1');hide('step4');setStep(3);
+}
+
+function renderAvaliacaoCards(){
+  var t=turmas[selectedTurma];
+  var container=document.getElementById('avaliacao-cards');
+  container.innerHTML='';
+  alunos.forEach(function(nome,ai){
+    if(!notas[ai])notas[ai]={};
+    var card=document.createElement('div');
+    card.className='aluno-card';
+    card.innerHTML='<div class="aluno-card-header"><div class="avatar">&#x1F464;</div><div class="aluno-nome">'+nome+'</div></div><div class="aluno-card-body" id="body-'+ai+'"></div>';
+    container.appendChild(card);
+    var body=document.getElementById('body-'+ai);
+    t.indicadores.forEach(function(ind,ii){
+      var item=document.createElement('div');
+      item.className='indicador-item';
+      var starsHTML='';
+      for(var v=0;v<=5;v++){
+        starsHTML+='<button type="button" class="star s'+v+(notas[ai][ii]===v?' selected':'')+'" onclick="setNota('+ai+','+ii+','+v+')" title="Nota '+v+'">'+v+'</button>';
+      }
+      item.innerHTML='<div class="ind-header"><div><div class="ind-num">Indicador '+ind.num+'</div><div class="ind-texto">'+ind.texto+'</div></div><div class="stars" id="stars-'+ai+'-'+ii+'">'+starsHTML+'</div></div><div class="field" style="margin:0;"><textarea placeholder="Observacao individual (opcional)..." style="min-height:60px;font-size:13px;" onchange="if(!notas['+ai+'].obs)notas['+ai+'].obs={};notas['+ai+'].obs['+ii+']=this.value"></textarea></div><div class="progress-bar-wrap" id="prog-'+ai+'-'+ii+'"><div class="progress-bar" style="width:'+((notas[ai][ii]||0)/5*100)+'%"></div></div>';
+      body.appendChild(item);
+    });
+  });
+}
+
+function setNota(ai,ii,val){
+  notas[ai][ii]=val;
+  var stars=document.getElementById('stars-'+ai+'-'+ii);
+  stars.querySelectorAll('.star').forEach(function(s){s.classList.toggle('selected',parseInt(s.textContent)===val);});
+  var prog=document.getElementById('prog-'+ai+'-'+ii);
+  if(prog)prog.querySelector('.progress-bar').style.width=(val/5*100)+'%';
+}
+
+function gerarResultado(){
+  var t=turmas[selectedTurma];
+  var missing=[];
+  alunos.forEach(function(nome,ai){t.indicadores.forEach(function(ind,ii){if(notas[ai][ii]===undefined||notas[ai][ii]===null)missing.push(nome+' - Indicador '+ind.num);});});
+  if(missing.length>0&&!confirm('Atencao: '+missing.length+' campo(s) sem nota.\n\nDeseja continuar mesmo assim?'))return;
+  var prof=document.getElementById('professor').value||'-';
+  var horario=(selectedHorario||'-').toUpperCase();
+  var data=document.getElementById('data-aval').value;
+  var dataFmt=data?new Date(data+'T12:00:00').toLocaleDateString('pt-BR'):'-';
+  document.getElementById('result-meta').textContent=t.nome+' '+horario+' - Prof. '+prof+' - '+dataFmt;
+  var table=document.getElementById('result-table');
+  var cols='<th>Aluno</th>';
+  t.indicadores.forEach(function(ind){cols+='<th>Ind.'+ind.num+'</th>';});
+  cols+='<th>Media</th>';
+  table.innerHTML='<tr>'+cols+'</tr>';
+  alunos.forEach(function(nome,ai){
+    var soma=0,count=0;
+    var cells='';
+    t.indicadores.forEach(function(ind,ii){
+      var n=notas[ai][ii]!==undefined?notas[ai][ii]:null;
+      soma+=n!==null?n:0;count++;
+      cells+='<td><span class="'+(n!==null?'nota-pill n'+n:'')+'">'+(n!==null?n:'-')+'</span></td>';
+    });
+    var media=count>0?(soma/count).toFixed(1):'-';
+    var mN=Math.round(soma/count);
+    table.innerHTML+='<tr><td><strong>'+nome+'</strong></td>'+cells+'<td><span class="nota-pill n'+mN+'">'+media+'</span></td></tr>';
+  });
+  show('step4');hide('step3');setStep(4);
+}
+
+function copiarResultado(){
+  var t=turmas[selectedTurma];
+  var prof=document.getElementById('professor').value||'-';
+  var horario=(selectedHorario||'-').toUpperCase();
+  var data=document.getElementById('data-aval').value;
+  var dataFmt=data?new Date(data+'T12:00:00').toLocaleDateString('pt-BR'):'-';
+  var obs=document.getElementById('obs-gerais').value;
+  var txt='AVALIACAO TRIMESTRAL - NATACAO\nTurma: '+t.nome+' '+horario+' ('+t.faixa+')\nProfessor: '+prof+' | Data: '+dataFmt+'\n\n';
+  alunos.forEach(function(nome,ai){
+    txt+=nome+'\n';
+    t.indicadores.forEach(function(ind,ii){
+      var n=notas[ai][ii]!==undefined?notas[ai][ii]:'-';
+      var obsInd=(notas[ai].obs&&notas[ai].obs[ii])?' ('+notas[ai].obs[ii]+')':'';
+      txt+='   ['+ind.num+'] '+ind.texto+': '+n+'/5'+obsInd+'\n';
+    });
+    var vals=t.indicadores.map(function(_,ii){return notas[ai][ii];}).filter(function(v){return v!==undefined&&v!==null;});
+    txt+='   Media: '+(vals.length?(vals.reduce(function(a,b){return a+b;},0)/vals.length).toFixed(1):'-')+'\n\n';
+  });
+  if(obs)txt+='Observacoes gerais:\n'+obs+'\n';
+  if(navigator.clipboard && window.isSecureContext){
+    navigator.clipboard.writeText(txt).then(function(){
+      alert('Resultado copiado!');
+    }).catch(function(){
+      copiarFallback(txt);
+    });
+  }else{
+    copiarFallback(txt);
+  }
+}
+function copiarFallback(txt){
+  var area=document.createElement('textarea');
+  area.value=txt;
+  area.setAttribute('readonly','');
+  area.style.position='fixed';
+  area.style.left='-9999px';
+  area.style.top='0';
+  document.body.appendChild(area);
+  area.focus();
+  area.select();
+  try{
+    document.execCommand('copy');
+    alert('Resultado copiado!');
+  }catch(e){
+    prompt('Copie o texto abaixo:',txt);
+  }
+  document.body.removeChild(area);
+}
+
+function novaAvaliacao(){
+  selectedTurma=null;selectedHorario=null;alunos=[];notas={};
+  document.querySelectorAll('.turma-btn').forEach(function(b){b.classList.remove('active');});
+  document.getElementById('meta-form').style.display='none';
+  document.getElementById('professor').value='';
+  document.getElementById('horario-turma').innerHTML='<option value="">- Selecione o horario -</option>';
+  document.getElementById('obs-gerais').value='';
+  goToStep1();
+}
+
+function setStep(n){for(var i=1;i<=4;i++){var el=document.getElementById('step'+i+'-dot');el.classList.remove('active','done');if(i<n)el.classList.add('done');else if(i===n)el.classList.add('active');}}
+function show(id){document.getElementById(id).classList.remove('hidden');}
+function hide(id){document.getElementById(id).classList.add('hidden');}
+</script>
+</body>
+</html>
